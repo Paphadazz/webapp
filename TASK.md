@@ -84,3 +84,13 @@ This document outlines the step-by-step implementation plan based on the SRS.
 - [x] **6.3 Final Review**
   - Verify strict data isolation (User A cannot see User B's data).
   - Code cleanup and documentation.
+
+## Phase 7: Version Control
+**Goal:** Secure code in a remote repository.
+
+- [x] **7.1 Git Initialization**
+  - Configure `.gitignore` to exclude sensitive/build files.
+  - Initialize local repository.
+- [x] **7.2 Remote Sync**
+  - Add remote origin (GitHub).
+  - Push initial code to `master` branch.

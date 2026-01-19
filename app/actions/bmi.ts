@@ -28,7 +28,17 @@ export async function addBmiRecord(prevState: any, formData: FormData) {
   return { success: true };
 }
 
-export async function getBmiHistory(range: 'daily' | 'weekly' | 'monthly' | 'yearly' = 'monthly') {
+export interface BmiRecord {
+  id: number;
+  user_id: number;
+  height: number;
+  weight: number;
+  bmi: number;
+  category: string;
+  created_at: string;
+}
+
+export async function getBmiHistory(range: 'daily' | 'weekly' | 'monthly' | 'yearly' = 'monthly'): Promise<BmiRecord[]> {
   const session: any = await getSession();
   if (!session) return [];
 
@@ -36,7 +46,7 @@ export async function getBmiHistory(range: 'daily' | 'weekly' | 'monthly' | 'yea
   const stmt = db.prepare(
     'SELECT * FROM bmi_records WHERE user_id = ? ORDER BY created_at ASC'
   );
-  return stmt.all(session.sub);
+  return stmt.all(session.sub) as BmiRecord[];
 }
 
 export async function getMisReport() {
