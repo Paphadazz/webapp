@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const dbPath = path.join(process.cwd(), 'bmi-tracker.db');
 const db = new Database(dbPath);
@@ -38,5 +39,26 @@ db.exec(`CREATE INDEX IF NOT EXISTS idx_bmi_user_date ON bmi_records(user_id, cr
 db.exec(`CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)`);
 console.log('- Created indexes');
 
-console.log('Database initialized successfully.');
-db.close();
+// Seed default user
+(async () => {
+  const username = 'paphada';
+  const email = 'paphada@example.com'; // Dummy email
+  const password = '1234567a';
+
+  try {
+    const existingUser = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)');
+      stmt.run(username, email, hashedPassword);
+      console.log(`- Created default user: ${username} / ${password}`);
+    } else {
+      console.log(`- User ${username} already exists.`);
+    }
+  } catch (error) {
+    console.error('Error seeding user:', error);
+  } finally {
+    console.log('Database initialized successfully.');
+    db.close();
+  }
+})();
