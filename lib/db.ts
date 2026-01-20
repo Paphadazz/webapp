@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 // Determine database path based on environment
 // In production (Vercel), use /tmp which is writable
